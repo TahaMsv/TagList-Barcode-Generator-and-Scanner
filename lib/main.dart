@@ -1,9 +1,9 @@
+import 'package:barcode_scanner/Login/Login.dart';
 import 'package:flutter/material.dart';
 import 'package:scan/scan.dart';
-import 'classes.dart';
+import 'MainPage.dart';
 import 'controller.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter Barcode Demo'),
+      home: LoginDemo(),
+
+      // const MyHomePage(title: 'Flutter Barcode Demo'),
     );
   }
 }
@@ -42,19 +44,18 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.purple,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: _pageIndex == 0 ? QRCodeScanner(scanResult: _scanResult) : QRCodeGenerator(),
-      ),
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Colors.purple,
-        items: [
-          TabItem(icon: Icons.document_scanner, title: 'Scan'),
-          TabItem(icon: Icons.qr_code_2_outlined, title: 'Generate'),
-        ],
-        onTap: (int i) => setState(() {
-          _pageIndex = i;
-        }),
-      ),
+      body: MainPage(),
+
+      // bottomNavigationBar: ConvexAppBar(
+      //   backgroundColor: Colors.purple,
+      //   items: [
+      //     TabItem(icon: Icons.document_scanner, title: 'Scan'),
+      //     // TabItem(icon: Icons.qr_code_2_outlined, title: 'Generate'),
+      //   ],
+      //   onTap: (int i) => setState(() {
+      //     _pageIndex = i;
+      //   }),
+      // ),
       floatingActionButton: _pageIndex == 0
           ? FloatingActionButton(
               onPressed: _showBarcodeScanner,
@@ -123,84 +124,6 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
       ),
-    );
-  }
-}
-
-class QRCodeGenerator extends StatefulWidget {
-  const QRCodeGenerator({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<QRCodeGenerator> createState() => _QRCodeGeneratorState();
-}
-
-class _QRCodeGeneratorState extends State<QRCodeGenerator> {
-  String? data;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Column(
-          children: [
-            Container(
-              height: 100,
-              margin: EdgeInsets.symmetric(vertical: 30, horizontal: 5),
-              decoration: BoxDecoration(border: Border.all(color: Colors.black54)),
-              child: TextFormField(
-                onChanged: (text) {
-                  setState(() {
-                    data = text;
-                  });
-                },
-                maxLines: 100,
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  hintText: 'Enter your code',
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            data == null
-                ? Container()
-                : QrImage(
-                    data: data!,
-                    version: QrVersions.auto,
-                    size: 200.0,
-                  ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class QRCodeScanner extends StatelessWidget {
-  const QRCodeScanner({
-    Key? key,
-    required String scanResult,
-  })  : _scanResult = scanResult,
-        super(key: key);
-
-  final String _scanResult;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text(
-          'You Barcode Contains the Text:',
-        ),
-        Text(
-          _scanResult,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ],
     );
   }
 }
